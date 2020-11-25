@@ -6,12 +6,16 @@ library(pacman)
 library(scales)
 library(dplyr)
 library(stringr)
+library(extrafont)
+font_import()
+loadfonts(device = "win")
 
 #####import combined 15N, AHA, HPG data#####
 ahTagUnenri <- read.csv("unenriTag.csv", stringsAsFactors = F)
 ahTagEnri <- read.csv("enriTag.csv", stringsAsFactors = F)
 data_full <- read.csv("15N_AHA_HPG_full.csv", stringsAsFactors = F) %>% mutate(n_tagged_pep_AHA = NA)
 highConf <- read.csv("high_confidence_proteins_grouped.csv", stringsAsFactors = F)
+wf <- windowsFonts()
 
 #####find the overlaps#####
 nahN <-  filter(data_full, is.na(LPF) == F)
@@ -72,7 +76,9 @@ draw.triple.venn(area1 = n_N,
                  cex = 2,
                  cat.cex = 2,
                  lty = "blank",
-                 category = c("15N", "AHA", "HPG"))
+                 category = c(expression(""^{15}~"N"),"AHA", "HPG"),
+                 fontfamily = wf$Arial,
+                 cat.fontfamily = wf$Arial)
 dev.off()
 #tagged vs untagged for unenriched sets - AHA
 grid.newpage()
@@ -128,7 +134,9 @@ draw.triple.venn(area1 = n_N,
                    cex = 2,
                    cat.cex = 1,
                    lty = "blank",
-                   category = c("15N Labelled", "AHA Enriched", "HPG Enriched"))
+                   category = c(expression(""^{15}~"N Labelled"), "AHA Enriched", "HPG Enriched"),
+                   fontfamily = wf$Arial,
+                   cat.fontfamily = wf$Arial)
 dev.off()
 
 #15N tagged compared to ncAA enriched > 0
@@ -145,7 +153,9 @@ draw.triple.venn(area1 = n_N,
                  cex = 2,
                  cat.cex = 1,
                  lty = "blank",
-                 category = c("15N Labelled", "AHA Enriched > 0", "HPG Enriched > 0"))
+                 category = c(expression(""^{15}~"N Labelled"), "AHA Enriched > 0", "HPG Enriched > 0"),
+                 fontfamily = wf$Arial,
+                 cat.fontfamily = wf$Arial)
 dev.off()
 #####scatter plots for fold-enrichment vs.LPF*riBAQ#####
 matching <- data_full

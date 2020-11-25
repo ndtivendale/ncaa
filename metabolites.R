@@ -37,15 +37,16 @@ ggplot(metabolites3, aes(x = time, y = meanLevel, color = Treatment)) +
   geom_point() +
   geom_errorbar(aes(ymin = meanLevel - stDevLevel, ymax = meanLevel + stDevLevel, width = 1)) + 
   geom_errorbarh(aes(xmin = time - 80/120, xmax = time + 80/120, height = 0.2)) +
+  scale_colour_manual(values = c("#E69F00", "#56B4E9", "#009E73", "#CC79A7")) +
+  labs(y = expression(paste("Mean abundance (", mu, "g/g (FW)")), x = "Time (h)") +
+  theme_minimal(base_size = 18)  +
   theme(axis.title.y = element_text(size = 18, hjust = .4),
         axis.title.x = element_text(size = 18),
-        legend.title = element_text(size = 12),
+        legend.title = element_text(size = 18),
         legend.text = element_text(size = 12),
         legend.position = c(0.75, 0.13),
-        strip.text.x = element_text(size = 12),
-        axis.text = element_text(size = 12)) +
-  scale_colour_manual(values = c("#E69F00", "#56B4E9", "#009E73", "#CC79A7")) +
-  labs(y = expression(paste("Mean abundance (", mu, "g/g (FW)")), x = "Time (h)")
+        strip.text = element_text(size = 18),
+        axis.text = element_text(size = 12))
 dev.off()
 
 #pairwise ttest for significance
