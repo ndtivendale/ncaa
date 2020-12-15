@@ -3,6 +3,9 @@ setwd("C:/temp/noncanonical_amino_acids_r_processing/protein_and_peptide")
 #PCA
 library(devtools)
 library(ggbiplot)
+library(dplyr)
+library(tidyr)
+library(tibble)
 
 #####HPG enriched vs. unenriched#####
 hpg_unenriched <- read.csv("hpg_unenriched_for_pca.csv", stringsAsFactors = F) %>%
@@ -17,14 +20,19 @@ hpg_combined <- rbind(hpg_unenriched, hpg_enriched) %>%
   filter(Experiment == "NT.19.47.10" | Experiment == "NT.19.47.13" | Experiment == "NT.19.47.16" |
            Experiment == "NT.20.21.25A" | Experiment == "NT.20.21.26A" | Experiment == "NT.20.21.27A") %>%
   mutate_all(~replace(., is.na(.), 0)) %>%
-  column_to_rownames(var = "Experiment") 
+  column_to_rownames(., var = "Experiment") 
 hpg_pca <- prcomp(hpg_combined, center = T, scale. = T)
 hpg_treatment <- c(rep("Unenriched", 3), rep("Enriched", 3))
 png("Figure 4B hpg_enri_v_unenri.png", width = 500, height = 500)
 ggbiplot(hpg_pca, scale = 1, var.axes = F, ellipse = T, groups = hpg_treatment, labels.size = 20) +
   ggtitle("B") +
-  theme(text = element_text(size = 15)) + 
-  labs(colour = "Groups")
+  theme_minimal(base_size = 18) +
+  theme(axis.title.y = element_text(size = 18, hjust = .4),
+        axis.title.x = element_text(size = 18),
+        legend.title = element_text(size = 18),
+        legend.text = element_text(size = 12),
+        axis.text = element_text(size = 12)) +
+  labs(x = "PC1 (54 %)", y = "PC2 (21 %)", colour = "Groups")
 dev.off()
 #####AHA enriched vs. unenriched#####
 aha_unenriched <- read.csv("aha_unenriched_for_pca.csv", stringsAsFactors = F) %>%
@@ -47,8 +55,13 @@ aha_treatment <- c(rep("Unenriched", 3), rep("Enriched", 3))
 png("Figure 4C aha_enri_v_unenri.png", width = 500, height = 500)
 ggbiplot(aha_pca, scale = 1, var.axes = F, ellipse = T, groups = aha_treatment) +
   ggtitle("C") +
-  theme(text = element_text(size = 15)) + 
-  labs(colour = "Groups")
+  theme_minimal(base_size = 18) +
+  theme(axis.title.y = element_text(size = 18, hjust = .4),
+        axis.title.x = element_text(size = 18),
+        legend.title = element_text(size = 18),
+        legend.text = element_text(size = 12),
+        axis.text = element_text(size = 12)) +
+  labs(x = "PC1 (55 %)", y = "PC2 (23 %)", colour = "Groups")
 dev.off()
 
 #####comparing the enriched AHA and HPG datasets######
@@ -64,8 +77,13 @@ comb_treatment <- c(rep("AHA", 2), rep("HPG", 3), "AHA")
 png("Figure 4D aha_v_hpg_enri.png", width = 500, height = 500)
 ggbiplot(enri_pca, scale = 1, var.axes = F, ellipse = T, groups = comb_treatment) +
   ggtitle("D")+
-  theme(text = element_text(size = 15)) + 
-  labs(colour = "Groups")
+  theme_minimal(base_size = 18) +
+  theme(axis.title.y = element_text(size = 18, hjust = .4),
+        axis.title.x = element_text(size = 18),
+        legend.title = element_text(size = 18),
+        legend.text = element_text(size = 12),
+        axis.text = element_text(size = 12)) +
+  labs(x = "PC1 (55 %)", y = "PC2 (22 %)", colour = "Groups")
 dev.off()
 
 untagged <- read.csv("protGroups_untreated_clean.csv", stringsAsFactors = F) %>%
@@ -87,6 +105,11 @@ comb_treatment2 <- c(rep("untagged", 3), "AHA", rep("HPG", 3), rep("AHA", 2))
 png("Figure 4A untagged_aha_hpg.png", width = 500, height = 500)
 ggbiplot(unenri_pca, scale = 1, var.axes = F, ellipse = T, groups = comb_treatment2) +
   ggtitle("A")+
-  theme(text = element_text(size = 15)) + 
-  labs(colour = "Treatment")
+  theme_minimal(base_size = 18) +
+  theme(axis.title.y = element_text(size = 18, hjust = .4),
+        axis.title.x = element_text(size = 18),
+        legend.title = element_text(size = 18),
+        legend.text = element_text(size = 12),
+        axis.text = element_text(size = 12,)) +
+  labs(x = "PC1 (19 %)", y = "PC2 (18 %)", colour = "Treatment")
 dev.off()

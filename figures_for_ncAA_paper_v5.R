@@ -132,9 +132,9 @@ draw.triple.venn(area1 = n_N,
                    fill = c("blue", "yellow", "red"),
                    alpha = 0.5,
                    cex = 2,
-                   cat.cex = 1,
+                   cat.cex = 2,
                    lty = "blank",
-                   category = c(expression(""^{15}~"N Labelled"), "AHA Enriched", "HPG Enriched"),
+                   category = c(expression(""^{15}~"N"),"AHA", "HPG"),
                    fontfamily = wf$Arial,
                    cat.fontfamily = wf$Arial)
 dev.off()
@@ -151,9 +151,9 @@ draw.triple.venn(area1 = n_N,
                  fill = c("blue", "yellow", "red"),
                  alpha = 0.5,
                  cex = 2,
-                 cat.cex = 1,
+                 cat.cex = 2,
                  lty = "blank",
-                 category = c(expression(""^{15}~"N Labelled"), "AHA Enriched > 0", "HPG Enriched > 0"),
+                 category = c(expression(""^{15}~"N"),"AHA", "HPG"),
                  fontfamily = wf$Arial,
                  cat.fontfamily = wf$Arial)
 dev.off()
@@ -171,15 +171,15 @@ matching_AHA_15N2 <- matching %>%
 png("Supp fig S8 fold_enrichment_HPG_v_LPFiBAQ.png", height = 500, width = 500)
 ggplot(matching_HPG_15N, aes(x = LPF.riBAQ, y = fold_enrichment_HPG, colour = tagged_unenriched_HPG)) +
   geom_point() + 
-  theme(text = element_text(size = 18)) +
-  labs(x = "LPF*riBAQ", y = "Fold-enrichment", colour = "Tagged?")
+  theme_minimal(base_size = 18) +
+  labs(x = "LPF*riBAQ", y = "Protein fold-enrichment", colour = "Tagged?")
 dev.off()
 
 png("Supp fig S7 fold_enrichment_AHA_v_LPFiBAQ.png", height = 500, width = 500)
 ggplot(matching_AHA_15N, aes(x = LPF.riBAQ, y = fold_enrichment_AHA, colour = tagged_unenriched_AHA)) +
   geom_point()+
-  theme(text = element_text(size = 18)) +
-  labs(x = "LPF*riBAQ", y = "Fold-enrichment", colour = "Tagged?")
+  theme_minimal(base_size = 18) +
+  labs(x = "LPF*riBAQ", y = "Protein fold-enrichment", colour = "Tagged?")
 dev.off()
 
 HPG_N_plot2 <- ggplot(matching_HPG_15N2, aes(x = LPF, y = fold_enrichment_HPG, colour = tagged_unenriched_HPG)) +
@@ -222,57 +222,57 @@ png("Supp Fig S4 fold_enri_HPG_v_length.png", height = 500, width = 500)
 ggplot(full_data, aes(x = length, y = fold_enrichment_HPG)) +
   geom_point(na.rm = T) +
   coord_cartesian(xlim = c(0, 1100), ylim = c(-1, 1)) +
-  theme(text = element_text(size = 18)) +
-  labs(x = "Protein length (amino acids)", y = "Fold-enrichment")
+  theme_minimal(base_size = 18) +
+  labs(x = "Protein length (amino acids)", y = "Protein fold-enrichment")
 dev.off()
 
 png("Supp Fig S3 fold_enri_AHA_v_length.png", height = 500, width = 500)
 ggplot(full_data, aes(x = length, y = fold_enrichment_AHA)) +
   geom_point(na.rm = T) +
   coord_cartesian(xlim = c(0, 1100), ylim = c(-1, 1))  +
-  theme(text = element_text(size = 18)) +
-  labs(x = "Protein length (amino acids)", y = "Fold-enrichment")
+  theme_minimal(base_size = 18) +
+  labs(x = "Protein length (amino acids)", y = "Protein fold-enrichment")
 dev.off()
 
 png("Supp Fig S2 fold_enri_HPG_v_percent_met.png", height = 500, width = 500)
 ggplot(full_data, aes(x = percent_met, y = fold_enrichment_HPG)) +
   geom_point() +
   coord_cartesian(ylim = c(-1, 1)) +
-  theme(text = element_text(size = 18)) +
-  labs(x = "Percent Met", y = "Fold-enrichment")
+  theme_minimal(base_size = 18) +
+  labs(x = "Percent Met", y = "Protein fold-enrichment")
 dev.off()
 
 png("Supp Fig S1 fold_enri_AHA_v_percent_met.png", height = 500, width = 500)
 ggplot(full_data, aes(x = percent_met, y = fold_enrichment_AHA)) +
   geom_point() +
   coord_cartesian(ylim = c(-1, 1)) +
-  theme(text = element_text(size = 18)) +
-  labs(x = "Percent Met", y = "Fold-enrichment")
+  theme_minimal(base_size = 18) +
+  labs(x = "Percent Met", y = "Protein fold-enrichment")
 dev.off()
 
 enri_v_tagPep <- ggplot(full_data2, aes(x = as.factor(n_tagged_pep_HPG), y = fold_enrichment_HPG)) +
   geom_boxplot(outlier.colour = "indianred", outlier.shape = 16, outlier.size = 2, notch = F) +
-  labs(y = "Protein fold enrichment", x = "No. peptides tagged with HPG")
+  labs(y = "Protein fold-enrichment", x = "No. peptides tagged with HPG")
 print(enri_v_tagPep)
 
 png("Supp Fig S5 fold_enri_v_n_HPG_tags_per_protein.png", height = 500, width = 500)
 ggplot(full_data3, aes(x = as.factor(n_tags_HPG), y = fold_enrichment_HPG)) +
   geom_boxplot(outlier.colour = "indianred", outlier.shape = 16, outlier.size = 2, notch = F) +
-  labs(y = "Protein fold enrichment", x = "No. HPG tags per protein") +
-  theme(text = element_text(size = 18))
+  labs(y = "Protein fold-enrichment", x = "No. HPG tags per protein") +
+  theme_minimal(base_size = 18)
 dev.off()
 
 png("Supp Fig S6 fold_enri_v_rel_pos_HPG_tag.png", height = 500, width = 500)
 ggplot(full_data4, aes(x = as.numeric(relative_position), y = as.numeric(fold_enrichment_HPG))) +
   geom_point(na.rm = T) +
   scale_y_continuous(labels = number_format(accuracy = 0.01)) + 
-  labs(y = "Protein fold enrichment", x = "Relative position of HPG tag") +
-  theme(text = element_text(size = 18))
+  labs(y = "Protein fold-enrichment", x = "Relative position of HPG tag") +
+  theme_minimal(base_size = 18)
 dev.off()
 
 png("Supp Fig S13 tags_v_met_content.png", width = 500, height = 500)
 ggplot(full_data, aes(x = percent_met, y = n_tags_HPG)) +
   geom_point(na.rm = T) +
   labs(y = "No. Met-to-HPG substitutions", x = "Percent Met") +
-  theme(text = element_text(size = 18))
+  theme_minimal(base_size = 18)
 dev.off()

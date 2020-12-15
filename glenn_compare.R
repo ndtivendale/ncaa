@@ -150,10 +150,15 @@ draw.quad.venn(area1 = hpg_count,
                     n1234 = hpg_aha_glenn_yu_count, 
                       fill = c("blue", "yellow", "red", "green"),
                       alpha = 0.5,
-                      cex = 1.8,
-                      cat.cex = 1.8,
+                      cex = 1.7,
+                      cat.cex = 1.7,
                       lty = "blank",
-                      category = c("Tivendale et al., HPG", "Tivendale et al., AHA", "Glenn et al. (2017), AHA", "Yu et al. (2020), AHA"))
+                      fontfamily = wf$Arial,
+                      cat.fontfamily = wf$Arial,
+                      category = c("Tivendale et al., HPG",
+                                   "Tivendale et al., AHA",
+                                   "Glenn et al. (2017), AHA",
+                                   "Yu et al. (2020), AHA"))
 dev.off()
 
 mapman <- read.delim("mapman.txt", stringsAsFactors = F, na.strings = "\''") %>% 
@@ -200,5 +205,7 @@ draw.triple.venn(area1 = hpg_count,
                     lty = "blank",
                     cex = 2,
                     cat.cex = 2,
+                    fontfamily = wf$Arial,
+                    cat.fontfamily = wf$Arial,
                     category = c("HPG", "AHA", "Glenn et al. (2017), AHA"))
 dev.off()
