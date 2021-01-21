@@ -32,9 +32,6 @@ ggplot(fresh_weights2, aes(x = factor(time), y = meanDensityChange)) +
   labs(y = expression(atop("Mean density change", paste("(% relative to initial density)"))), x = "Time (h)")
 dev.off()
 
-#Display the plot
-print(FWPlot +  labs(y = "Mean density change (% relative to initial density)", x = "Time (h)"))
-
 #Find statistically significant differences
 fresh_weights8 <- fresh_weights %>%
   rename("time" = "Time..h.") %>%

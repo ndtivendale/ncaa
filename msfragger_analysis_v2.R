@@ -194,15 +194,16 @@ percent_mod <- function(x, y){
     filter(startsWith(protein, "A")) %>% 
     select(c("protein", "peptide", "modification_info")) %>% 
     mutate(protein = str_sub(protein, end = 11)) %>% 
-    mutate(modification_info = str_replace(modification_info, ", \\d+C\\(57.021465\\)", "")) %>%
-    mutate(modification_info = str_replace(modification_info, "\\d+C\\(57.021465\\), ", "")) %>%
-    mutate(modification_info = str_replace(modification_info, "\\d+C\\(57.021465\\)", "")) %>% 
-    mutate(modification_info = str_replace(modification_info, ", \\d+M\\(-4.9863\\)", "")) %>%
-    mutate(modification_info = str_replace(modification_info, "\\d+M\\(-4.9863\\), ", "")) %>%
-    mutate(modification_info = str_replace(modification_info, "\\d+M\\(-4.9863\\)", "")) %>% 
-    mutate(modification_info = str_replace(modification_info, ", \\d+M\\(-21.9877\\)", "")) %>%
-    mutate(modification_info = str_replace(modification_info, "\\d+M\\(-21.9877\\), ", "")) %>%
-    mutate(modification_info = str_replace(modification_info, "\\d+M\\(-21.9877\\)", "")) 
+    mutate(modification_info = str_replace_all(modification_info, ", \\d+C\\(57.021465\\)", "")) %>%
+    mutate(modification_info = str_replace_all(modification_info, "\\d+C\\(57.021465\\), ", "")) %>%
+    mutate(modification_info = str_replace_all(modification_info, "\\d+C\\(57.021465\\)", "")) %>% 
+    mutate(modification_info = str_replace_all(modification_info, ", \\d+M\\(-4.9863\\)", "")) %>%
+    mutate(modification_info = str_replace_all(modification_info, "\\d+M\\(-4.9863\\), ", "")) %>%
+    mutate(modification_info = str_replace_all(modification_info, "\\d+M\\(-4.9863\\)", "")) %>% 
+    mutate(modification_info = str_replace_all(modification_info, ", \\d+M\\(-21.9877\\)", "")) %>%
+    mutate(modification_info = str_replace_all(modification_info, "\\d+M\\(-21.9877\\), ", "")) %>%
+    mutate(modification_info = str_replace_all(modification_info, "\\d+M\\(-21.9877\\)", ""))
+  
   #Create a vector that contains all of the AGIs from the PeptideProphe/ProteinProphet checked file
   prot <- as.vector(unique(y$Protein))
   #Create two empty dataframes
@@ -289,7 +290,7 @@ mod_in_two <- function(x){
   if(x$modInTwo_u[i] == "N" & x$n_mod_hit_u[i] != 0){
     x$percentMod_u[i] <- 0
     x$Mods_u[i] <- NA
-    x$n_mod_hit_u[i] <- 0
+    x$    n_mod_hit_u[i] <- 0
   }
   }
   x
@@ -307,7 +308,7 @@ empty_as_na2 <- function(x){
   empty_as_na3 <- function(x){
     if("factor" %in% class(x)) x <- as.character(x) ## since ifelse wont work with factors
     ifelse(as.character(x)!="  ", x, NA)  
-}
+  }
 #####
 #For each data file, select only: Protein and Razor Assigned Modifications and remove any proteins that are
 #not from Arabidopsis####
@@ -388,6 +389,26 @@ aha2 <- inner_join(ahau, ahae, by = "Protein", suffix = c("_u", "_e"))%>%
   filter(modInTwo_u == "Y" | modInTwo_e == "Y") %>% 
   mutate(percentMod_u = NA, percentMod_e = NA, n_mod_hit_u = NA, n_mod_hit_e = NA, n_hit_u = NA, n_hit_e = NA, pValue = NA,
          sig = NA)
+for(i in 1:nrow(aha2)){
+  if(is.nan(aha2$percentMod_1_u[i]) == T){
+    aha2$percentMod_1_u[i] <- NA
+  }
+  if(is.nan(aha2$percentMod_2_u[i]) == T){
+    aha2$percentMod_2_u[i] <- NA
+  }
+  if(is.nan(aha2$percentMod_3_u[i]) == T){
+    aha2$percentMod_3_u[i] <- NA
+  }
+  if(is.nan(aha2$percentMod_1_e[i]) == T){
+    aha2$percentMod_1_e[i] <- NA
+  }
+  if(is.nan(aha2$percentMod_2_e[i]) == T){
+    aha2$percentMod_1_u[i] <- NA
+  }
+  if(is.nan(aha2$percentMod_3_e[i]) == T){
+    aha2$percentMod_1_u[i] <- NA
+  }
+}
 aha2$percentMod_u <- round(rowMeans(aha2[, c("percentMod_1_u", "percentMod_2_u", "percentMod_3_u")], na.rm = T), digits = 0)
 aha2$percentMod_e <- round(rowMeans(aha2[, c("percentMod_1_e", "percentMod_2_e", "percentMod_3_e")], na.rm = T), digits = 0)
 aha2$n_mod_hit_u <- round(rowMeans(aha2[, c("n_mod_hit_1_u", "n_mod_hit_2_u", "n_mod_hit_3_u")], na.rm = T), digits = 0)
@@ -425,6 +446,26 @@ hpg2 <- inner_join(hpgu, hpge, by = "Protein", suffix = c("_u", "_e")) %>%
   filter(modInTwo_u == "Y" | modInTwo_e == "Y") %>% 
   mutate(percentMod_u = NA, percentMod_e = NA, n_mod_hit_u = NA, n_mod_hit_e = NA, n_hit_u = NA, n_hit_e = NA, pValue = NA,
          sig = NA)
+for(i in 1:nrow(hpg2)){
+  if(is.nan(hpg2$percentMod_1_u[i]) == T){
+    hpg2$percentMod_1_u[i] <- NA
+  }
+  if(is.nan(hpg2$percentMod_2_u[i]) == T){
+    hpg2$percentMod_2_u[i] <- NA
+  }
+  if(is.nan(hpg2$percentMod_3_u[i]) == T){
+    hpg2$percentMod_3_u[i] <- NA
+  }
+  if(is.nan(hpg2$percentMod_1_e[i]) == T){
+    hpg2$percentMod_1_e[i] <- NA
+  }
+  if(is.nan(hpg2$percentMod_2_e[i]) == T){
+    hpg2$percentMod_1_u[i] <- NA
+  }
+  if(is.nan(hpg2$percentMod_3_e[i]) == T){
+    hpg2$percentMod_1_u[i] <- NA
+  }
+}
 hpg2$percentMod_u <- round(rowMeans(hpg2[, c("percentMod_1_u", "percentMod_2_u", "percentMod_3_u")], na.rm = T), digits = 0)
 hpg2$percentMod_e <- round(rowMeans(hpg2[, c("percentMod_1_e", "percentMod_2_e", "percentMod_3_e")], na.rm = T), digits = 0)
 hpg2$n_mod_hit_u <- round(rowMeans(hpg2[, c("n_mod_hit_1_u", "n_mod_hit_2_u", "n_mod_hit_3_u")], na.rm = T), digits = 0)
@@ -467,6 +508,15 @@ aha2 <- count_mods(aha2)
 hpg2 <- count_mods(hpg2)
 
 #Create and output file that shows the number of modifications for each protein for each treatment group.
+#add mapman data as new variables
+mapman <- read.delim("mapman.txt", stringsAsFactors = F, na.strings = "\''") %>% 
+  select("IDENTIFIER", "BINCODE", "NAME", "DESCRIPTION") %>% 
+  dplyr::rename("prot" = "IDENTIFIER") %>% 
+  mutate_all(funs(str_replace(., "\'", ""))) %>% 
+  mutate_all(funs(str_replace(., "\'", "")))
+mapman <- set_names(mapman, tolower(names(mapman)))
+mapman$prot <- toupper(mapman$prot)
+mapman <- mapman[complete.cases(mapman), ]
 tair10 <- ahae1 %>% 
   select(c("Protein", "Protein.ID"))
 output2 <- full_join(aha2, hpg2, by = "Protein", suffix = c("_AHA", "_HPG")) %>% 
@@ -481,4 +531,166 @@ for(i in 1:nrow(output2)) {
 output2 <- mutate_each(output2, funs(empty_as_na))
 output2 <- mutate_each(output2, funs(empty_as_na2))
 output2 <- mutate_each(output2, funs(empty_as_na3))
+output2 <- left_join(output2, mapman, by = c("Protein" ="prot"))
 write.csv(output2, "mod_counts_for_indiviaul_proteins.csv", row.names = F)
+
+####To calculate the appearance of individual mods####
+#select only AHA-relevant columns
+aha_mods <- output2 %>% 
+  select(c("Protein", "Mods_u_AHA", "modInTwo_u_AHA"))
+
+#filter so that only proteins that are modified in two in the unenriched set remain
+aha_mods <- filter(aha_mods, modInTwo_u_AHA == "Y")
+
+#select the unenriched mods column only, remove the parentheses
+aha_mods <- aha_mods %>% 
+  select("Mods_u_AHA")
+aha_mods$Mods_u_AHA <- str_replace_all(aha_mods$Mods_u_AHA, "\\)", "")
+aha_mods$Mods_u_AHA <- str_replace_all(aha_mods$Mods_u_AHA, "\\(", "")
+
+#split in the modifications into seperate strings and place them all in one column of the dataframe
+aha_modsV <- str_trim(unlist(as.vector(str_split(aha_mods$Mods_u_AHA, pattern = ","))), side = "both") %>% 
+  str_replace(., "[:digit:]+M", "M") %>% 
+  str_replace(., "[:digit:]+P", "P") %>% 
+  str_replace(., "[:digit:]+K", "K") %>% 
+  str_replace(., "[:digit:]+S", "S") %>% 
+  str_replace(., "[:digit:]+T", "T") %>% 
+  str_replace(., "[:digit:]+Y", "Y") %>% 
+  str_replace(., "[:digit:]+E", "E") %>% 
+  str_replace(., "[:digit:]+R", "R")
+
+aha_mods <- data.frame(PTM = aha_modsV)
+#use table to count the number of each modification
+n_aha_mods_u <- as.data.frame(table(aha_mods)) %>%
+  rename("aha_u_freq" = "Freq", "mods" = "aha_mods")
+
+#select only AHA-relevant columns
+aha_mods <- output2 %>% 
+  select(c("Protein", "Mods_e_AHA", "modInTwo_e_AHA"))
+
+#filter so that only proteins that are modified in two in the unenriched set remain
+aha_mods <- filter(aha_mods, modInTwo_e_AHA == "Y")
+
+#select the unenriched mods column only, remove the parentheses
+aha_mods <- aha_mods %>% 
+  select("Mods_e_AHA")
+aha_mods$Mods_e_AHA <- str_replace_all(aha_mods$Mods_e_AHA, "\\)", "")
+aha_mods$Mods_e_AHA <- str_replace_all(aha_mods$Mods_e_AHA, "\\(", "")
+
+#split in the modifications into seperate strings and place them all in one column of the dataframe
+aha_modsV <- str_trim(unlist(as.vector(str_split(aha_mods$Mods_e_AHA, pattern = ","))), side = "both") %>% 
+  str_replace(., "[:digit:]+M", "M") %>% 
+  str_replace(., "[:digit:]+P", "P") %>% 
+  str_replace(., "[:digit:]+K", "K") %>% 
+  str_replace(., "[:digit:]+S", "S") %>% 
+  str_replace(., "[:digit:]+T", "T") %>% 
+  str_replace(., "[:digit:]+Y", "Y") %>% 
+  str_replace(., "[:digit:]+E", "E") %>% 
+  str_replace(., "[:digit:]+R", "R")
+
+aha_mods <- data.frame(PTM = aha_modsV)
+#use table to count the number of each modification
+n_aha_mods_e <- as.data.frame(table(aha_mods)) %>%
+  rename("aha_e_freq" = "Freq", "mods" = "aha_mods")
+
+#select only HPG-relevant columns
+hpg_mods <- output2 %>% 
+  select(c("Protein", "Mods_u_HPG", "modInTwo_u_HPG"))
+
+#filter so that only proteins that are modified in two in the unenriched set remain
+hpg_mods <- filter(hpg_mods, modInTwo_u_HPG == "Y")
+
+#select the unenriched mods column only, remove the parentheses
+hpg_mods <- hpg_mods %>% 
+  select("Mods_u_HPG")
+hpg_mods$Mods_u_HPG <- str_replace_all(hpg_mods$Mods_u_HPG, "\\)", "")
+hpg_mods$Mods_u_HPG <- str_replace_all(hpg_mods$Mods_u_HPG, "\\(", "")
+
+#split in the modifications into seperate strings and place them all in one column of the dataframe
+hpg_modsV <- str_trim(unlist(as.vector(str_split(hpg_mods$Mods_u_HPG, pattern = ","))), side = "both") %>% 
+  str_replace(., "[:digit:]+M", "M") %>% 
+  str_replace(., "[:digit:]+P", "P") %>% 
+  str_replace(., "[:digit:]+K", "K") %>% 
+  str_replace(., "[:digit:]+S", "S") %>% 
+  str_replace(., "[:digit:]+T", "T") %>% 
+  str_replace(., "[:digit:]+Y", "Y") %>% 
+  str_replace(., "[:digit:]+E", "E") %>% 
+  str_replace(., "[:digit:]+R", "R")
+
+hpg_mods <- data.frame(PTM = hpg_modsV)
+#use table to count the number of each modification
+n_hpg_mods_u <- as.data.frame(table(hpg_mods)) %>%
+  rename("hpg_u_freq" = "Freq", "mods" = "hpg_mods")
+
+#select only HPG-relevant columns
+hpg_mods <- output2 %>% 
+  select(c("Protein", "Mods_e_HPG", "modInTwo_e_HPG"))
+
+#filter so that only proteins that are modified in two in the unenriched set remain
+hpg_mods <- filter(hpg_mods, modInTwo_e_HPG == "Y")
+
+#select the unenriched mods column only, remove the parentheses
+hpg_mods <- hpg_mods %>% 
+  select("Mods_e_HPG")
+hpg_mods$Mods_e_HPG <- str_replace_all(hpg_mods$Mods_e_HPG, "\\)", "")
+hpg_mods$Mods_e_HPG <- str_replace_all(hpg_mods$Mods_e_HPG, "\\(", "")
+
+#split in the modifications into seperate strings and place them all in one column of the dataframe
+hpg_modsV <- str_trim(unlist(as.vector(str_split(hpg_mods$Mods_e_HPG, pattern = ","))), side = "both") %>% 
+  str_replace(., "[:digit:]+M", "M") %>% 
+  str_replace(., "[:digit:]+P", "P") %>% 
+  str_replace(., "[:digit:]+K", "K") %>% 
+  str_replace(., "[:digit:]+S", "S") %>% 
+  str_replace(., "[:digit:]+T", "T") %>% 
+  str_replace(., "[:digit:]+Y", "Y") %>% 
+  str_replace(., "[:digit:]+E", "E") %>% 
+  str_replace(., "[:digit:]+R", "R")
+
+hpg_mods <- data.frame(PTM = hpg_modsV)
+#use table to count the number of each modification
+n_hpg_mods_e <- as.data.frame(table(hpg_mods)) %>%
+  rename("hpg_e_freq" = "Freq", "mods" = "hpg_mods")
+mod_counts_joined <- n_aha_mods_u %>% 
+  full_join(n_aha_mods_e, by = "mods") %>% 
+  full_join(n_hpg_mods_u, by = "mods") %>% 
+  full_join(n_hpg_mods_e, by = "mods") %>% 
+  mutate(u_freq = aha_u_freq + hpg_u_freq) %>% 
+  select(-c("aha_u_freq", "hpg_u_freq"))
+mod_counts_joined$mods <- str_replace_all(mod_counts_joined$mods, "14.0157", " methylation")
+mod_counts_joined$mods <- str_replace_all(mod_counts_joined$mods, "42.0106", " acetylation")
+mod_counts_joined$mods <- str_replace_all(mod_counts_joined$mods, "15.9949", " oxidation")
+mod_counts_joined$mods <- str_replace_all(mod_counts_joined$mods, "42.0106", " acetylation")
+mod_counts_joined$mods <- str_replace_all(mod_counts_joined$mods, "79.96633", " phosphorylation")
+mod_counts_joined$mods <- str_replace_all(mod_counts_joined$mods, "-21.9877", "-to-HPG substitution")
+mod_counts_joined$mods <- str_replace_all(mod_counts_joined$mods, "-4.9863", "-to-AHA substitution")
+mod_tot_u <- sum(mod_counts_joined$u_freq, na.rm = T)
+mod_tot_aha_e <- sum(mod_counts_joined$aha_e_freq, na.rm = T)
+mod_tot_hpg_e <- sum(mod_counts_joined$hpg_e_freq, na.rm = T)
+mod_counts_joined <- mod_counts_joined %>% 
+  mutate(u_freq = u_freq/mod_tot_u*100)%>% 
+  mutate(aha_e_freq = aha_e_freq/mod_tot_aha_e*100)%>% 
+  mutate(hpg_e_freq = hpg_e_freq/mod_tot_hpg_e*100) %>% 
+  rename("u_%_occurrence" = "u_freq", "aha_e_%_occurrence" = "aha_e_freq", "hpg_e_%_occurrence" = "hpg_e_freq")
+write.csv(mod_counts_joined, "mod_frequencies.csv", row.names = F)
+
+####Make a figure of the percentages####
+mod_counts_joined2 <- mod_counts_joined %>% 
+  pivot_longer(cols = 2:4, names_to = "Group", values_to = "occurrence") %>% 
+  mutate(Group = str_sub(Group, end = 5)) %>% 
+  mutate(Group = str_replace(Group, "aha_e", "AHA nascent"),
+         Group = str_replace(Group, "hpg_e", "HPG nascent"),
+         Group = str_replace(Group, "u_%_o", "Bulk"))
+png("Figure 6 mod counts.png", width =  500, height = 500)
+ggplot(mod_counts_joined2, aes(x = as.factor(mods), y = occurrence, fill = Group)) + 
+  geom_bar(stat = "identity", position = "dodge") + 
+  labs(x = "Modification", y = "Frequency (%)") +
+  scale_fill_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +
+  theme_minimal(base_size = 18) +
+  theme(axis.title.y = element_text(size = 18, hjust = .4),
+        axis.title.x = element_text(size = 18),
+        axis.text.x = element_text(angle = 45, vjust = 1.2, hjust = 1.1),
+        legend.title = element_text(size = 18),
+        legend.text = element_text(size = 12),
+        axis.text = element_text(size = 12),
+        legend.position = "bottom")
+dev.off()

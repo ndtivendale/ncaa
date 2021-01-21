@@ -48,15 +48,15 @@ n_HAe <- length(unique(naheHA$prot))
 naheHAN <- filter(naheHA, is.na(LPF) == F)
 n_HANe <- length(unique(naheHAN$prot))
 
-naheH2 <-  filter(data_full, fold_enrichment_HPG > 0)
+naheH2 <-  filter(data_full, meanFoldEnri_HPG > 0)
 n_He2 <- length(unique(naheH2$prot))
-naheA2 <- filter(data_full, fold_enrichment_AHA > 0)
+naheA2 <- filter(data_full, meanFoldEnri_AHA > 0)
 n_Ae2 <- length(unique(naheA2$prot))
 naheNH2 <- filter(naheH2, is.na(LPF) == F)
 n_NHe2 <- length(unique(naheNH2$prot))
 naheNA2 <- filter(naheA2, is.na(LPF) == F)
 n_NAe2 <- length(unique(naheNA2$prot))
-naheHA2 <- filter(naheH2, fold_enrichment_AHA > 0)
+naheHA2 <- filter(naheH2, meanFoldEnri_AHA > 0)
 n_HAe2 <- length(unique(naheHA2$prot))
 naheHAN2 <- filter(naheHA2, is.na(LPF) == F)
 n_HANe2 <- length(unique(naheHAN2$prot))
@@ -160,45 +160,45 @@ dev.off()
 #####scatter plots for fold-enrichment vs.LPF*riBAQ#####
 matching <- data_full
 matching_HPG_15N <- matching %>% 
-  filter(is.na(LPF.riBAQ) == F & is.na(fold_enrichment_HPG) == F)
+  filter(is.na(LPF.riBAQ) == F & is.na(meanFoldEnri_HPG) == F)
 matching_HPG_15N2 <- matching %>% 
-  filter(is.na(LPF) == F & is.na(fold_enrichment_HPG) == F)
+  filter(is.na(LPF) == F & is.na(meanFoldEnri_HPG) == F)
 matching_AHA_15N <- matching %>% 
-  filter(is.na(LPF.riBAQ) == F & is.na(fold_enrichment_AHA) == F)
+  filter(is.na(LPF.riBAQ) == F & is.na(meanFoldEnri_AHA) == F)
 matching_AHA_15N2 <- matching %>% 
-  filter(is.na(LPF) == F & is.na(fold_enrichment_AHA) == F)
+  filter(is.na(LPF) == F & is.na(meanFoldEnri_AHA) == F)
 
-png("Supp fig S8 fold_enrichment_HPG_v_LPFiBAQ.png", height = 500, width = 500)
-ggplot(matching_HPG_15N, aes(x = LPF.riBAQ, y = fold_enrichment_HPG, colour = tagged_unenriched_HPG)) +
+png("Supp fig S8 meanFoldEnri_HPG_v_LPFiBAQ.png", height = 500, width = 500)
+ggplot(matching_HPG_15N, aes(x = LPF.riBAQ, y = meanFoldEnri_HPG, colour = tagged_unenriched_HPG)) +
   geom_point() + 
   theme_minimal(base_size = 18) +
   labs(x = "LPF*riBAQ", y = "Protein fold-enrichment", colour = "Tagged?")
 dev.off()
 
-png("Supp fig S7 fold_enrichment_AHA_v_LPFiBAQ.png", height = 500, width = 500)
-ggplot(matching_AHA_15N, aes(x = LPF.riBAQ, y = fold_enrichment_AHA, colour = tagged_unenriched_AHA)) +
+png("Supp fig S7 meanFoldEnri_AHA_v_LPFiBAQ.png", height = 500, width = 500)
+ggplot(matching_AHA_15N, aes(x = LPF.riBAQ, y = meanFoldEnri_AHA, colour = tagged_unenriched_AHA)) +
   geom_point()+
   theme_minimal(base_size = 18) +
   labs(x = "LPF*riBAQ", y = "Protein fold-enrichment", colour = "Tagged?")
 dev.off()
 
-HPG_N_plot2 <- ggplot(matching_HPG_15N2, aes(x = LPF, y = fold_enrichment_HPG, colour = tagged_unenriched_HPG)) +
+HPG_N_plot2 <- ggplot(matching_HPG_15N2, aes(x = LPF, y = meanFoldEnri_HPG, colour = tagged_unenriched_HPG)) +
   geom_point()
 print(HPG_N_plot2)
 
-AHA_N_plot2 <- ggplot(matching_AHA_15N2, aes(x = LPF, y = fold_enrichment_AHA, colour = tagged_unenriched_AHA)) +
+AHA_N_plot2 <- ggplot(matching_AHA_15N2, aes(x = LPF, y = meanFoldEnri_AHA, colour = tagged_unenriched_AHA)) +
   geom_point()
 print(AHA_N_plot2)
 
 #####generate bar graphs vs. AGI####
-aEnri2 <- filter(data_full, fold_enrichment_AHA > 0)
-aEnriPlot <- ggplot(aEnri2, aes(x = factor(prot), y = as.numeric(fold_enrichment_AHA), fill = tagged_unenriched_AHA)) +
+aEnri2 <- filter(data_full, meanFoldEnri_AHA > 0)
+aEnriPlot <- ggplot(aEnri2, aes(x = factor(prot), y = as.numeric(meanFoldEnri_AHA), fill = tagged_unenriched_AHA)) +
   geom_bar(stat = "identity") +
   ylim(0,1)
 print(aEnriPlot)
 
-hEnri2 <- filter(data_full, fold_enrichment_HPG > 0)
-hEnriPlot <- ggplot(hEnri2, aes(x = factor(prot), y = fold_enrichment_HPG, fill = tagged_unenriched_HPG)) +
+hEnri2 <- filter(data_full, meanFoldEnri_HPG > 0)
+hEnriPlot <- ggplot(hEnri2, aes(x = factor(prot), y = meanFoldEnri_HPG, fill = tagged_unenriched_HPG)) +
   geom_bar(stat = "identity") +
   ylim(0,1)
 print(hEnriPlot)
@@ -208,7 +208,7 @@ full_data <- data_full
 full_data2 <- filter(full_data, is.na(n_tagged_pep_HPG) == F)
 full_data3 <- filter(full_data, is.na(n_tags_HPG) == F)
 full_data4 <- filter(full_data, is.na(rel_HPG_pos_1) == F) %>%
-  select(c("prot", "fold_enrichment_HPG", "rel_HPG_pos_1", "rel_HPG_pos_2",
+  select(c("prot", "meanFoldEnri_HPG", "rel_HPG_pos_1", "rel_HPG_pos_2",
            "rel_HPG_pos_3", "rel_HPG_pos_4", "rel_HPG_pos_5",
            "rel_HPG_pos_6", "rel_HPG_pos_7", "rel_HPG_pos_8")) %>% 
   gather(key = "tag number", value = "relative_position", c("rel_HPG_pos_1", "rel_HPG_pos_2",
@@ -219,7 +219,7 @@ full_data4 <- filter(full_data, is.na(rel_HPG_pos_1) == F) %>%
 full_data4 <- full_data4[complete.cases(full_data4), ]
 
 png("Supp Fig S4 fold_enri_HPG_v_length.png", height = 500, width = 500)
-ggplot(full_data, aes(x = length, y = fold_enrichment_HPG)) +
+ggplot(full_data, aes(x = length, y = meanFoldEnri_HPG)) +
   geom_point(na.rm = T) +
   coord_cartesian(xlim = c(0, 1100), ylim = c(-1, 1)) +
   theme_minimal(base_size = 18) +
@@ -227,7 +227,7 @@ ggplot(full_data, aes(x = length, y = fold_enrichment_HPG)) +
 dev.off()
 
 png("Supp Fig S3 fold_enri_AHA_v_length.png", height = 500, width = 500)
-ggplot(full_data, aes(x = length, y = fold_enrichment_AHA)) +
+ggplot(full_data, aes(x = length, y = meanFoldEnri_AHA)) +
   geom_point(na.rm = T) +
   coord_cartesian(xlim = c(0, 1100), ylim = c(-1, 1))  +
   theme_minimal(base_size = 18) +
@@ -235,7 +235,7 @@ ggplot(full_data, aes(x = length, y = fold_enrichment_AHA)) +
 dev.off()
 
 png("Supp Fig S2 fold_enri_HPG_v_percent_met.png", height = 500, width = 500)
-ggplot(full_data, aes(x = percent_met, y = fold_enrichment_HPG)) +
+ggplot(full_data, aes(x = percent_met, y = meanFoldEnri_HPG)) +
   geom_point() +
   coord_cartesian(ylim = c(-1, 1)) +
   theme_minimal(base_size = 18) +
@@ -243,27 +243,27 @@ ggplot(full_data, aes(x = percent_met, y = fold_enrichment_HPG)) +
 dev.off()
 
 png("Supp Fig S1 fold_enri_AHA_v_percent_met.png", height = 500, width = 500)
-ggplot(full_data, aes(x = percent_met, y = fold_enrichment_AHA)) +
+ggplot(full_data, aes(x = percent_met, y = meanFoldEnri_AHA)) +
   geom_point() +
   coord_cartesian(ylim = c(-1, 1)) +
   theme_minimal(base_size = 18) +
   labs(x = "Percent Met", y = "Protein fold-enrichment")
 dev.off()
 
-enri_v_tagPep <- ggplot(full_data2, aes(x = as.factor(n_tagged_pep_HPG), y = fold_enrichment_HPG)) +
+enri_v_tagPep <- ggplot(full_data2, aes(x = as.factor(n_tagged_pep_HPG), y = meanFoldEnri_HPG)) +
   geom_boxplot(outlier.colour = "indianred", outlier.shape = 16, outlier.size = 2, notch = F) +
   labs(y = "Protein fold-enrichment", x = "No. peptides tagged with HPG")
 print(enri_v_tagPep)
 
 png("Supp Fig S5 fold_enri_v_n_HPG_tags_per_protein.png", height = 500, width = 500)
-ggplot(full_data3, aes(x = as.factor(n_tags_HPG), y = fold_enrichment_HPG)) +
+ggplot(full_data3, aes(x = as.factor(n_tags_HPG), y = meanFoldEnri_HPG)) +
   geom_boxplot(outlier.colour = "indianred", outlier.shape = 16, outlier.size = 2, notch = F) +
   labs(y = "Protein fold-enrichment", x = "No. HPG tags per protein") +
   theme_minimal(base_size = 18)
 dev.off()
 
 png("Supp Fig S6 fold_enri_v_rel_pos_HPG_tag.png", height = 500, width = 500)
-ggplot(full_data4, aes(x = as.numeric(relative_position), y = as.numeric(fold_enrichment_HPG))) +
+ggplot(full_data4, aes(x = as.numeric(relative_position), y = as.numeric(meanFoldEnri_HPG))) +
   geom_point(na.rm = T) +
   scale_y_continuous(labels = number_format(accuracy = 0.01)) + 
   labs(y = "Protein fold-enrichment", x = "Relative position of HPG tag") +

@@ -26,5 +26,3 @@ ggplot(a, aes(x = factor(time), y = mean_area_change)) +
   theme(axis.text = element_text(size = 18), strip.text = element_text(size = 18)) + 
   labs(y = expression(atop("Mean grean area change", paste("(% relative to initial density)"))), x = "Time (h)")
 dev.off()
-#Display the plot
-print(aPlot +  labs(y = "Mean grean area change (% relative to initial density)", x = "Time (h)"))

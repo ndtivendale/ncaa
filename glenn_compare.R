@@ -6,6 +6,9 @@
 setwd("C:/temp/noncanonical_amino_acids_r_processing/protein_and_peptide")
 library(tidyverse)
 library(VennDiagram)
+library(extrafont)
+font_import()
+loadfonts(device = "win")
 
 hpg <- read.csv("protFoldEnriHPG.csv", stringsAsFactors = F) %>% 
   select(c("firstID", "meanriBAQ_enriched"))

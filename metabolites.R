@@ -60,5 +60,3 @@ pairwise_ttest <- pairwise.t.test(metabolites4$Met, metabolites4$treatment,
                                   alternative = "two.sided")
 pairwise_ttest_df <- do.call(rbind.data.frame, pairwise_ttest)
 write.csv(pairwise_ttest_df, "pairwise_ttest_Met.csv")
-
-ttest <- t.test()
