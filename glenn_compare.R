@@ -21,13 +21,7 @@ glenn_pep <- read.delim("peptidesGlenn.txt", stringsAsFactors = F) %>%
           (Intensity.Wes_control1_2 > 0 & Intensity.Wes_control1_3 > 0)) |
          ((Intensity.Wes_control2_1 > 0 & Intensity.Wes_control2_2 > 0) |
           (Intensity.Wes_control2_1 > 0 & Intensity.Wes_control2_3 > 0) |
-          (Intensity.Wes_control2_2 > 0 & Intensity.Wes_control2_3 > 0)) |
-         ((Intensity.Wes_HS1 > 0 & Intensity.Wes_HS2 > 0) |
-          (Intensity.Wes_HS1 > 0 & Intensity.Wes_HS3 > 0) |
-          (Intensity.Wes_HS2 > 0 & Intensity.Wes_HS3 > 0)) |
-         ((Intensity.Wes_Recovery1 > 0 & Intensity.Wes_Recovery2 > 0) |
-          (Intensity.Wes_Recovery1 > 0 & Intensity.Wes_Recovery3 > 0) |
-          (Intensity.Wes_Recovery2 > 0 & Intensity.Wes_Recovery3 > 0)))  
+          (Intensity.Wes_control2_2 > 0 & Intensity.Wes_control2_3 > 0)))
 glenn_pep_count <- length(unique(glenn_pep$Sequence))
 glenn_pep_AHA <- glenn_pep %>% 
   filter(Met..AHA.site.IDs != "")
@@ -40,13 +34,7 @@ glenn <- read.delim("proteinGroupsGlenn.txt", stringsAsFactors = F) %>%
             (Intensity.Wes_control1_2 > 0 & Intensity.Wes_control1_3 > 0)) |
            ((Intensity.Wes_control2_1 > 0 & Intensity.Wes_control2_2 > 0) |
               (Intensity.Wes_control2_1 > 0 & Intensity.Wes_control2_3 > 0) |
-              (Intensity.Wes_control2_2 > 0 & Intensity.Wes_control2_3 > 0)) |
-           ((Intensity.Wes_HS1 > 0 & Intensity.Wes_HS2 > 0) |
-              (Intensity.Wes_HS1 > 0 & Intensity.Wes_HS3 > 0) |
-              (Intensity.Wes_HS2 > 0 & Intensity.Wes_HS3 > 0)) |
-           ((Intensity.Wes_Recovery1 > 0 & Intensity.Wes_Recovery2 > 0) |
-              (Intensity.Wes_Recovery1 > 0 & Intensity.Wes_Recovery3 > 0) |
-              (Intensity.Wes_Recovery2 > 0 & Intensity.Wes_Recovery3 > 0))) %>% 
+              (Intensity.Wes_control2_2 > 0 & Intensity.Wes_control2_3 > 0)))
   mutate(firstID = str_sub(Protein.IDs, end = 11)) %>% 
   mutate(present_glenn = "Y") %>% 
   select(c("firstID", "present_glenn"))
@@ -54,20 +42,9 @@ glenn_all_prot_count <- length(unique(glenn$firstID))
 
 yu <- read.csv("yu.csv", stringsAsFactors = F) %>% 
   dplyr::rename("firstID" = "Accession") %>% 
+  filter(Abundance..F1..Col.0 > 0) %>% 
   select("firstID") %>% 
   mutate(present_yu = "Y")
-
-glenn_control <- read.delim("proteinGroupsGlenn.txt", stringsAsFactors = F) %>% 
-  filter(Reverse != "+" & Potential.contaminant != "+") %>%
-  filter(((Intensity.Wes_control1_1 > 0 & Intensity.Wes_control1_2 > 0) |
-            (Intensity.Wes_control1_1 > 0 & Intensity.Wes_control1_3 > 0) |
-            (Intensity.Wes_control1_2 > 0 & Intensity.Wes_control1_3 > 0)) |
-           ((Intensity.Wes_control2_1 > 0 & Intensity.Wes_control2_2 > 0) |
-              (Intensity.Wes_control2_1 > 0 & Intensity.Wes_control2_3 > 0) |
-              (Intensity.Wes_control2_2 > 0 & Intensity.Wes_control2_3 > 0))) %>% 
-  mutate(firstID = str_sub(Protein.IDs, end = 11)) %>% 
-  mutate(present_glenn = "Y") %>% 
-  select(c("firstID", "present_glenn"))
 
 #compare HPG and AHA enriched set to Glenn and Yu
 #individual
@@ -177,7 +154,7 @@ write.csv(comp, "tivendale_glenn_yu_comparison.csv", row.names = F)
 
 #for Glenn control only
 comp_control <- full_join(hpg ,aha, by = "firstID", suffix = c("_HPG", "_AHA")) %>% 
-  full_join(glenn_control, by = "firstID")
+  full_join(glenn, by = "firstID")
 #single list
 glenn_count_c <- comp_control %>% 
   filter(present_glenn == "Y")

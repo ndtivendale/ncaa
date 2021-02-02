@@ -649,13 +649,11 @@ hpg_modsV <- str_trim(unlist(as.vector(str_split(hpg_mods$Mods_e_HPG, pattern = 
 hpg_mods <- data.frame(PTM = hpg_modsV)
 #use table to count the number of each modification
 n_hpg_mods_e <- as.data.frame(table(hpg_mods)) %>%
-  rename("hpg_e_freq" = "Freq", "mods" = "hpg_mods")
+  dplyr::rename("hpg_e_freq" = "Freq", "mods" = "hpg_mods")
 mod_counts_joined <- n_aha_mods_u %>% 
   full_join(n_aha_mods_e, by = "mods") %>% 
   full_join(n_hpg_mods_u, by = "mods") %>% 
-  full_join(n_hpg_mods_e, by = "mods") %>% 
-  mutate(u_freq = aha_u_freq + hpg_u_freq) %>% 
-  select(-c("aha_u_freq", "hpg_u_freq"))
+  full_join(n_hpg_mods_e, by = "mods")
 mod_counts_joined$mods <- str_replace_all(mod_counts_joined$mods, "14.0157", " methylation")
 mod_counts_joined$mods <- str_replace_all(mod_counts_joined$mods, "42.0106", " acetylation")
 mod_counts_joined$mods <- str_replace_all(mod_counts_joined$mods, "15.9949", " oxidation")
@@ -663,34 +661,110 @@ mod_counts_joined$mods <- str_replace_all(mod_counts_joined$mods, "42.0106", " a
 mod_counts_joined$mods <- str_replace_all(mod_counts_joined$mods, "79.96633", " phosphorylation")
 mod_counts_joined$mods <- str_replace_all(mod_counts_joined$mods, "-21.9877", "-to-HPG substitution")
 mod_counts_joined$mods <- str_replace_all(mod_counts_joined$mods, "-4.9863", "-to-AHA substitution")
-mod_tot_u <- sum(mod_counts_joined$u_freq, na.rm = T)
+mod_tot_aha_u <- sum(mod_counts_joined$aha_u_freq, na.rm = T)
+mod_tot_hpg_u <- sum(mod_counts_joined$hpg_u_freq, na.rm = T)
 mod_tot_aha_e <- sum(mod_counts_joined$aha_e_freq, na.rm = T)
 mod_tot_hpg_e <- sum(mod_counts_joined$hpg_e_freq, na.rm = T)
 mod_counts_joined <- mod_counts_joined %>% 
-  mutate(u_freq = u_freq/mod_tot_u*100)%>% 
+  mutate(aha_u_freq = aha_u_freq/mod_tot_aha_u*100)%>% 
+  mutate(hpg_u_freq = hpg_u_freq/mod_tot_hpg_u*100) %>% 
   mutate(aha_e_freq = aha_e_freq/mod_tot_aha_e*100)%>% 
   mutate(hpg_e_freq = hpg_e_freq/mod_tot_hpg_e*100) %>% 
-  rename("u_%_occurrence" = "u_freq", "aha_e_%_occurrence" = "aha_e_freq", "hpg_e_%_occurrence" = "hpg_e_freq")
+  dplyr::rename("aha_u_%_occurrence" = "aha_u_freq", "hpg_u_%_occurrence" = "hpg_u_freq",
+                "aha_e_%_occurrence" = "aha_e_freq", "hpg_e_%_occurrence" = "hpg_e_freq")
 write.csv(mod_counts_joined, "mod_frequencies.csv", row.names = F)
 
 ####Make a figure of the percentages####
 mod_counts_joined2 <- mod_counts_joined %>% 
-  pivot_longer(cols = 2:4, names_to = "Group", values_to = "occurrence") %>% 
+  pivot_longer(cols = 2:5, names_to = "Group", values_to = "occurrence") %>% 
   mutate(Group = str_sub(Group, end = 5)) %>% 
-  mutate(Group = str_replace(Group, "aha_e", "AHA nascent"),
-         Group = str_replace(Group, "hpg_e", "HPG nascent"),
-         Group = str_replace(Group, "u_%_o", "Bulk"))
-png("Figure 6 mod counts.png", width =  500, height = 500)
-ggplot(mod_counts_joined2, aes(x = as.factor(mods), y = occurrence, fill = Group)) + 
+  mutate(Group = str_replace(Group, "aha_u", "AHA bulk")) %>% 
+  mutate(Group = str_replace(Group, "hpg_u", "HPG bulk")) %>% 
+  mutate(Group = str_replace(Group, "aha_e", "AHA nascent")) %>% 
+  mutate(Group = str_replace(Group, "hpg_e", "HPG nascent"))
+mod_counts_joined_HPG <- mod_counts_joined2 %>% 
+  filter(Group == "HPG bulk" | Group == "HPG nascent")
+mod_counts_joined_AHA <- mod_counts_joined2 %>% 
+  filter(Group == "AHA bulk" | Group == "AHA nascent")
+png("Figure 6 mod counts_HPG.png", width =  1000, height = 1000)
+ggplot(mod_counts_joined_HPG, aes(x = as.factor(mods), y = occurrence, fill = Group)) + 
   geom_bar(stat = "identity", position = "dodge") + 
   labs(x = "Modification", y = "Frequency (%)") +
-  scale_fill_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +
-  theme_minimal(base_size = 18) +
-  theme(axis.title.y = element_text(size = 18, hjust = .4),
-        axis.title.x = element_text(size = 18),
+  scale_fill_manual(values = c("#009E73", "#CC79A7")) +
+  theme_minimal(base_size = 36) +
+  theme(axis.title.y = element_text(size = 36, hjust = .4),
+        axis.title.x = element_text(size = 36),
         axis.text.x = element_text(angle = 45, vjust = 1.2, hjust = 1.1),
-        legend.title = element_text(size = 18),
-        legend.text = element_text(size = 12),
-        axis.text = element_text(size = 12),
-        legend.position = "bottom")
+        legend.title = element_text(size = 36),
+        legend.text = element_text(size = 24),
+        axis.text = element_text(size = 24),
+        legend.position = c(0.9,1),
+        legend.background = element_rect(fill="white",
+                                         colour = "white"))
 dev.off()
+png("Figure 6 mod counts_AHA.png", width =  1000, height = 1000)
+ggplot(mod_counts_joined_AHA, aes(x = as.factor(mods), y = occurrence, fill = Group)) + 
+  geom_bar(stat = "identity", position = "dodge") + 
+  labs(x = "Modification", y = "Frequency (%)") +
+  scale_fill_manual(values = c("#E69F00", "#56B4E9")) +
+  theme_minimal(base_size = 36) +
+  theme(axis.title.y = element_text(size = 36, hjust = .4),
+        axis.title.x = element_text(size = 36),
+        axis.text.x = element_text(angle = 45, vjust = 1.2, hjust = 1.1),
+        legend.title = element_text(size = 36),
+        legend.text = element_text(size = 24),
+        axis.text = element_text(size = 24),
+        legend.position = c(0.9,1),
+        legend.background = element_rect(fill="white",
+                                         colour = "white"))
+dev.off()
+
+####Find modifications on high confidence proteins that were significantly more modified in the enriched vs the bulk####
+#get the high confidence dataframe and use it to filter the mods dataframe
+neo <- read.csv("high_confidence_proteins.csv", stringsAsFactors = F) %>% 
+  select("prot")
+neo <- as.vector(neo$prot)
+output3 <- output2 %>% 
+  filter(sig_HPG == "Y", u_mod_percent_greater_HPG == T) %>% 
+  select(c("Protein", "Mods_u_HPG", "Mods_e_HPG", "name", "description", "sig_HPG", "u_mod_percent_greater_HPG")) %>% 
+  mutate(Mods_e_HPG = str_replace_all(Mods_e_HPG, "N-term", "Nterm"),
+         Mods_u_HPG = str_replace_all(Mods_u_HPG, "N-term", "Nterm")) %>% 
+  mutate(E_me = NA, K_ac = NA, K_me = NA, M_ox = NA, Nterm_ac = NA, P_ox = NA, R_me = NA, S_po = NA, T_po = NA, Y_po = NA)
+
+#define a function that will break up the string of mods and return the number of each
+break_mods <- function(w){
+  x <- str_trim(unlist(as.vector(str_split(w, pattern = ","))), side = "both") %>% 
+    str_replace(., "[:digit:]+M", "M") %>% 
+    str_replace(., "[:digit:]+P", "P") %>% 
+    str_replace(., "[:digit:]+K", "K") %>% 
+    str_replace(., "[:digit:]+S", "S") %>% 
+    str_replace(., "[:digit:]+T", "T") %>% 
+    str_replace(., "[:digit:]+Y", "Y") %>% 
+    str_replace(., "[:digit:]+E", "E") %>% 
+    str_replace(., "[:digit:]+R", "R")
+  y <- data.frame(PTM = x)
+  z <- as.data.frame(table(y))
+  z
+}
+#for each protein, break up the string of modifications in the unenriched and enriched and then count the number of each kind of mod
+for(i in 1:nrow(output3)) {
+  smith <- break_mods(output3$Mods_u_HPG[i]) %>% 
+    pivot_wider(names_from = y, values_from = Freq)
+  tryCatch({output3$E_me[i] <- smith$`E(14.0157)`}, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
+  tryCatch({output3$K_ac[i] <- smith$`K(42.0106)`}, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
+  tryCatch({output3$K_me[i] <- smith$`K(14.0157)`}, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
+  tryCatch({ output3$M_ox[i] <- smith$`M(15.9949)`}, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
+  tryCatch({output3$Nterm_ac[i] <- smith$`Nterm(42.0106)`}, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
+  tryCatch({output3$P_ox[i] <- smith$`P(15.9949)`}, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
+  tryCatch({output3$R_me[i] <- smith$`R(14.0157)`}, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
+  tryCatch({output3$S_po[i] <- smith$`S(79.96633)`}, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
+  tryCatch({output3$T_po[i] <- smith$`T(79.96633)`}, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
+  tryCatch({output3$Y_po[i] <- smith$`Y(79.96633)`}, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
+}
+
+output4 <- output3 %>% 
+  filter(Protein %in% neo) %>% 
+  select(-c("sig_HPG", "u_mod_percent_greater_HPG"))
+
+write.csv(output3, "different_types_of_mods.csv", row.names = F)
+write.csv(output4, "different_types_of_mods_high_confidence.csv", row.names = F)
