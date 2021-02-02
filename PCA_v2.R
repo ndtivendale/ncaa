@@ -22,10 +22,10 @@ hpg_combined <- rbind(hpg_unenriched, hpg_enriched) %>%
   mutate_all(~replace(., is.na(.), 0)) %>%
   column_to_rownames(., var = "Experiment") 
 hpg_pca <- prcomp(hpg_combined, center = T, scale. = T)
-hpg_treatment <- c(rep("Unenriched", 3), rep("Enriched", 3))
-png("Figure 4B hpg_enri_v_unenri.png", width = 500, height = 500)
+hpg_treatment <- c(rep("Bulk", 3), rep("Enriched", 3))
+png("Figure 4C hpg_enri_v_unenri.png", width = 500, height = 500)
 ggbiplot(hpg_pca, scale = 1, var.axes = F, ellipse = T, groups = hpg_treatment, labels.size = 20) +
-  ggtitle("B") +
+  ggtitle("C") +
   theme_minimal(base_size = 18) +
   theme(axis.title.y = element_text(size = 18, hjust = .4),
         axis.title.x = element_text(size = 18),
@@ -51,10 +51,10 @@ aha_combined <- rbind(aha_unenriched, aha_enriched)%>%
   mutate_all(~replace(., is.na(.), 0)) %>%
   column_to_rownames(var = "Experiment") 
 aha_pca <- prcomp(aha_combined, center = T, scale. = T)
-aha_treatment <- c(rep("Unenriched", 3), rep("Enriched", 3))
-png("Figure 4C aha_enri_v_unenri.png", width = 500, height = 500)
+aha_treatment <- c(rep("Bulk", 3), rep("Enriched", 3))
+png("Figure 4B aha_enri_v_unenri.png", width = 500, height = 500)
 ggbiplot(aha_pca, scale = 1, var.axes = F, ellipse = T, groups = aha_treatment) +
-  ggtitle("C") +
+  ggtitle("B") +
   theme_minimal(base_size = 18) +
   theme(axis.title.y = element_text(size = 18, hjust = .4),
         axis.title.x = element_text(size = 18),
