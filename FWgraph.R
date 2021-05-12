@@ -20,12 +20,15 @@ fresh_weights2 <- fresh_weights %>%
   ungroup() %>% 
   mutate(Treatment = factor(Treatment, levels = c("AHA", "HPG", "Met", "Nitrogen-15", "Control")))
 fresh_weights2$Treatment = factor(fresh_weights2$Treatment, labels = c("AHA", "HPG", "Met", "{}^{15}~N", "Control"))
+fresh_weights2 <- filter(fresh_weights2, Treatment != "Met")
 #Make a scatter plot object
-png("Figure 1C FW_growth_bar_plot_separate.png", width = 750, height = 250)
-ggplot(fresh_weights2, aes(x = factor(time), y = meanDensityChange)) +
-  geom_bar(stat="identity", fill="#009E73", position=position_dodge()) +
-  facet_wrap(~ Treatment, ncol = 5, labeller = label_parsed) +
+postscript("Figure 1D FW_growth_bar_plot_separate.ps")
+ggplot(fresh_weights2, aes(x = factor(time), y = meanDensityChange, fill = Treatment)) +
+  geom_bar(stat="identity", position=position_dodge()) +
+  facet_wrap(~ Treatment, ncol = 4, labeller = label_parsed) +
   theme_minimal(base_size = 18) +
+  theme(legend.position = "none") +
+  scale_fill_manual(values = c("#E69F00", "#56B4E9", "#009E73", "#CC79A7")) +
   geom_errorbar(aes(ymin = meanDensityChange - stDevDensityChange, ymax = meanDensityChange + stDevDensityChange),
                 width = .2, position=position_dodge()) +
   theme(axis.text = element_text(size = 18), strip.text = element_text(size = 18, face = "bold")) + 

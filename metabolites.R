@@ -29,7 +29,7 @@ metabolites3 <- metabolites2 %>%
   filter(compound != "HPG" & compound != "AHA")
 
 #Make a scatter plot object
-png("Figure 2 metabolites plot.png", width =  500, height = 500)
+postscript("Figure 2 metabolites plot.ps")
 ggplot(metabolites3, aes(x = time, y = meanLevel, color = Treatment)) +
   scale_y_log10() +
   facet_wrap(~ compound, nrow = 3, ncol = 2, scales = "free_y") +

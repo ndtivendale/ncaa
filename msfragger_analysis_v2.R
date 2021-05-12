@@ -665,6 +665,7 @@ mod_tot_aha_u <- sum(mod_counts_joined$aha_u_freq, na.rm = T)
 mod_tot_hpg_u <- sum(mod_counts_joined$hpg_u_freq, na.rm = T)
 mod_tot_aha_e <- sum(mod_counts_joined$aha_e_freq, na.rm = T)
 mod_tot_hpg_e <- sum(mod_counts_joined$hpg_e_freq, na.rm = T)
+write_csv(mod_counts_joined, "mod_counts_absolute.csv")
 mod_counts_joined <- mod_counts_joined %>% 
   mutate(aha_u_freq = aha_u_freq/mod_tot_aha_u*100)%>% 
   mutate(hpg_u_freq = hpg_u_freq/mod_tot_hpg_u*100) %>% 
@@ -686,7 +687,8 @@ mod_counts_joined_HPG <- mod_counts_joined2 %>%
   filter(Group == "HPG bulk" | Group == "HPG nascent")
 mod_counts_joined_AHA <- mod_counts_joined2 %>% 
   filter(Group == "AHA bulk" | Group == "AHA nascent")
-png("Figure 6 mod counts_HPG.png", width =  1000, height = 1000)
+
+postscript("Figure 6 mod counts_HPG.ps")
 ggplot(mod_counts_joined_HPG, aes(x = as.factor(mods), y = occurrence, fill = Group)) + 
   geom_bar(stat = "identity", position = "dodge") + 
   labs(x = "Modification", y = "Frequency (%)") +
@@ -702,7 +704,7 @@ ggplot(mod_counts_joined_HPG, aes(x = as.factor(mods), y = occurrence, fill = Gr
         legend.background = element_rect(fill="white",
                                          colour = "white"))
 dev.off()
-png("Figure 6 mod counts_AHA.png", width =  1000, height = 1000)
+postscript("Figure 6 mod counts_AHA.ps")
 ggplot(mod_counts_joined_AHA, aes(x = as.factor(mods), y = occurrence, fill = Group)) + 
   geom_bar(stat = "identity", position = "dodge") + 
   labs(x = "Modification", y = "Frequency (%)") +

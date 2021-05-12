@@ -9,12 +9,14 @@ library(stringr)
 library(extrafont)
 font_import()
 loadfonts(device = "win")
+loadfonts(device = "postscript")
 
 #####import combined 15N, AHA, HPG data#####
 ahTagUnenri <- read.csv("unenriTag.csv", stringsAsFactors = F)
 ahTagEnri <- read.csv("enriTag.csv", stringsAsFactors = F)
 data_full <- read.csv("15N_AHA_HPG_full.csv", stringsAsFactors = F) %>% mutate(n_tagged_pep_AHA = NA)
 highConf <- read.csv("high_confidence_proteins_grouped.csv", stringsAsFactors = F)
+ps <- postscriptFonts()
 wf <- windowsFonts()
 
 #####find the overlaps#####
@@ -63,7 +65,7 @@ n_HANe2 <- length(unique(naheHAN2$prot))
 
 #####make venn diagrams showing the overlap of the datasets#####
 #Global overlap of the three sets
-png("Figure 3 venn_15n_ncaa_tag_overlap.png", width = 500, height = 500)
+jpeg("Figure 3 venn_15n_ncaa_tag_overlap.jpeg", width = 12, height = 12, units = "in", res = 600)
 draw.triple.venn(area1 = n_N,
                  area2 = n_nahA,
                  area3 = n_nahH,
@@ -71,7 +73,7 @@ draw.triple.venn(area1 = n_N,
                  n23 = n_nahAH,
                  n13 = n_nahNH,
                  n123 = n_nahNAH,
-                 fill = c("blue", "yellow", "red"),
+                 fill = c("#CC79A7", "#E69F00", "#009E73"),
                  alpha = 0.5,
                  cex = 2,
                  cat.cex = 2,
@@ -121,7 +123,7 @@ draw.pairwise.venn(area1 = ahTagEnri[2,2],
                    category = "HPG")          
 
 #15N tagged compared to ncAA enriched
-png("Figure 4E venn_15N_labelled_ncAA_enriched.png", width = 500, height = 500)
+jpeg("Figure 4E venn_15N_labelled_ncAA_enriched.jpeg", width = 12, height = 12, units = "in", res = 600)
 draw.triple.venn(area1 = n_N,
                    area2 = n_Ae,
                    area3 = n_He,
@@ -129,7 +131,7 @@ draw.triple.venn(area1 = n_N,
                    n23 = n_HAe,
                    n13 = n_NHe,
                    n123 = n_HANe,
-                   fill = c("blue", "yellow", "red"),
+                   fill = c("#CC79A7", "#E69F00", "#009E73"),
                    alpha = 0.5,
                    cex = 2,
                    cat.cex = 2,
@@ -140,7 +142,7 @@ draw.triple.venn(area1 = n_N,
 dev.off()
 
 #15N tagged compared to ncAA enriched > 0
-png("Figure 4F venn_15N_labelled_ncAA_enriched_more_than_0.png", width = 500, height = 500)
+jpeg("Figure 4F venn_15N_labelled_ncAA_enriched_more_than_0.jpeg", width = 12, height = 12, units = "in", res = 600)
 draw.triple.venn(area1 = n_N,
                  area2 = n_Ae2,
                  area3 = n_He2,
@@ -148,7 +150,7 @@ draw.triple.venn(area1 = n_N,
                  n23 = n_HAe2,
                  n13 = n_NHe2,
                  n123 = n_HANe2,
-                 fill = c("blue", "yellow", "red"),
+                 fill = c("#CC79A7", "#E69F00", "#009E73"),
                  alpha = 0.5,
                  cex = 2,
                  cat.cex = 2,
@@ -168,14 +170,14 @@ matching_AHA_15N <- matching %>%
 matching_AHA_15N2 <- matching %>% 
   filter(is.na(LPF) == F & is.na(meanFoldEnri_AHA) == F)
 
-png("Supp fig S8 meanFoldEnri_HPG_v_LPFiBAQ.png", height = 500, width = 500)
+postscript("Supp fig S8 meanFoldEnri_HPG_v_LPFiBAQ.ps")
 ggplot(matching_HPG_15N, aes(x = LPF.riBAQ, y = meanFoldEnri_HPG, colour = tagged_unenriched_HPG)) +
   geom_point() + 
   theme_minimal(base_size = 18) +
   labs(x = "LPF*riBAQ", y = "Protein fold-enrichment", colour = "Tagged?")
 dev.off()
 
-png("Supp fig S7 meanFoldEnri_AHA_v_LPFiBAQ.png", height = 500, width = 500)
+postscript("Supp fig S7 meanFoldEnri_AHA_v_LPFiBAQ.ps")
 ggplot(matching_AHA_15N, aes(x = LPF.riBAQ, y = meanFoldEnri_AHA, colour = tagged_unenriched_AHA)) +
   geom_point()+
   theme_minimal(base_size = 18) +
@@ -218,7 +220,7 @@ full_data4 <- filter(full_data, is.na(rel_HPG_pos_1) == F) %>%
   mutate_all(funs(str_replace(., "rel_HPG_pos_", "")))
 full_data4 <- full_data4[complete.cases(full_data4), ]
 
-png("Supp Fig S4 fold_enri_HPG_v_length.png", height = 500, width = 500)
+postscript("Supp Fig S4 fold_enri_HPG_v_length.ps")
 ggplot(full_data, aes(x = length, y = meanFoldEnri_HPG)) +
   geom_point(na.rm = T) +
   coord_cartesian(xlim = c(0, 1100), ylim = c(-1, 1)) +
@@ -226,7 +228,7 @@ ggplot(full_data, aes(x = length, y = meanFoldEnri_HPG)) +
   labs(x = "Protein length (amino acids)", y = "Protein fold-enrichment")
 dev.off()
 
-png("Supp Fig S3 fold_enri_AHA_v_length.png", height = 500, width = 500)
+postscript("Supp Fig S3 fold_enri_AHA_v_length.ps")
 ggplot(full_data, aes(x = length, y = meanFoldEnri_AHA)) +
   geom_point(na.rm = T) +
   coord_cartesian(xlim = c(0, 1100), ylim = c(-1, 1))  +
@@ -234,7 +236,7 @@ ggplot(full_data, aes(x = length, y = meanFoldEnri_AHA)) +
   labs(x = "Protein length (amino acids)", y = "Protein fold-enrichment")
 dev.off()
 
-png("Supp Fig S2 fold_enri_HPG_v_percent_met.png", height = 500, width = 500)
+postscript("Supp Fig S2 fold_enri_HPG_v_percent_met.ps")
 ggplot(full_data, aes(x = percent_met, y = meanFoldEnri_HPG)) +
   geom_point() +
   coord_cartesian(ylim = c(-1, 1)) +
@@ -242,7 +244,7 @@ ggplot(full_data, aes(x = percent_met, y = meanFoldEnri_HPG)) +
   labs(x = "Percent Met", y = "Protein fold-enrichment")
 dev.off()
 
-png("Supp Fig S1 fold_enri_AHA_v_percent_met.png", height = 500, width = 500)
+postscript("Supp Fig S1 fold_enri_AHA_v_percent_met.ps")
 ggplot(full_data, aes(x = percent_met, y = meanFoldEnri_AHA)) +
   geom_point() +
   coord_cartesian(ylim = c(-1, 1)) +
@@ -255,14 +257,14 @@ enri_v_tagPep <- ggplot(full_data2, aes(x = as.factor(n_tagged_pep_HPG), y = mea
   labs(y = "Protein fold-enrichment", x = "No. peptides tagged with HPG")
 print(enri_v_tagPep)
 
-png("Supp Fig S5 fold_enri_v_n_HPG_tags_per_protein.png", height = 500, width = 500)
+postscript("Supp Fig S5 fold_enri_v_n_HPG_tags_per_protein.ps")
 ggplot(full_data3, aes(x = as.factor(n_tags_HPG), y = meanFoldEnri_HPG)) +
   geom_boxplot(outlier.colour = "indianred", outlier.shape = 16, outlier.size = 2, notch = F) +
   labs(y = "Protein fold-enrichment", x = "No. HPG tags per protein") +
   theme_minimal(base_size = 18)
 dev.off()
 
-png("Supp Fig S6 fold_enri_v_rel_pos_HPG_tag.png", height = 500, width = 500)
+postscript("Supp Fig S6 fold_enri_v_rel_pos_HPG_tag.ps")
 ggplot(full_data4, aes(x = as.numeric(relative_position), y = as.numeric(meanFoldEnri_HPG))) +
   geom_point(na.rm = T) +
   scale_y_continuous(labels = number_format(accuracy = 0.01)) + 
@@ -270,7 +272,7 @@ ggplot(full_data4, aes(x = as.numeric(relative_position), y = as.numeric(meanFol
   theme_minimal(base_size = 18)
 dev.off()
 
-png("Supp Fig S13 tags_v_met_content.png", width = 500, height = 500)
+postscript("Supp Fig S13 tags_v_met_content.ps")
 ggplot(full_data, aes(x = percent_met, y = n_tags_HPG)) +
   geom_point(na.rm = T) +
   labs(y = "No. Met-to-HPG substitutions", x = "Percent Met") +

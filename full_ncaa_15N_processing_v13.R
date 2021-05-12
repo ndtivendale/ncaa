@@ -14,7 +14,7 @@ library(utils)
 library(tidyr)
 
 ######read in files#####
-nLabelled <- fread("15NCellCulture24h.txt", na.strings = "") #15N dataset
+nLabelled <- fread("cell_culture_all_reps_decoys_old_names_24_h_only.tsv", na.strings = "") #15N dataset
 aLabelled <- fread("Met-_AHASitesUnenriched.txt", na.strings = "") #AHA dataset
 hLabelled <- fread("Met-_HPGSitesUnenriched.txt", na.strings = "") #HPG dataset
 
@@ -88,7 +88,7 @@ for(i in 1:length(protein_id)){
   }
 }
 nLabelled3 <- data_hold %>%
-  filter(LPF >= 0.2 & rsd <= 30 & n_pep >= 2 & n_hits > 2) %>%
+  filter(LPF >= 0.2 & rsd <= 30 & n_pep >= 2 & n_hits >= 3) %>%
   mutate_each(funs(str_replace_all(., " ", "")))
 
 #AHA
@@ -1462,6 +1462,33 @@ u <- filter(omega2, group == "Solute transport")
 u <- length(unique(u$prot))
 v <- filter(omega2, group == "Vesicle trafficking")
 v <- length(unique(v$prot))
+w <- filter(omega2, group != "Amino acid metabolism" & 
+              group != "Carbohydrate metabolism" & 
+              group != "Lipid metabolism" &
+              group != "Cellular respiration" &
+              group != "Nucleotide metabolism" &
+              group != "RNA processing" &
+              group != "Coenzyme metabolism" &
+              group != "Enzyme classification" &
+              group != "Chromatin organisation" &
+              group != "Cytoskeleton organisation" &
+              group != "Cell wall organisation" &
+              group != "not assigned" &
+              group != "Nutrient uptake" &
+              group != "Photosynthesis" &
+              str_detect(group2, "ribosome", negate = T) &
+              str_detect(group2, "translation", negate = T) &
+              str_detect(group3, "translation", negate = T) &
+              group2 != "proteolysis" &
+              group2 != "ubiquitin-proteasome system" &
+              group2 != "protein quality control" &
+              group != "Protein modification" &
+              group != "Protein translocation" &
+              group != "Redox homeostasis" &
+              group != "Secondary metabolism" &
+              group != "Solute transport" &
+              group != "Vesicle trafficking")
+w <- length(unique(w$prot))
 
 #Number of proteins Enriched in AHA set
 omega3 <- filter(omega2, is.na(meanriBAQ_enriched_AHA) == F)
@@ -1505,6 +1532,33 @@ u2 <- filter(omega3, group == "Solute transport")
 u2 <- length(unique(u2$prot))
 v2 <- filter(omega3, group == "Vesicle trafficking")
 v2 <- length(unique(v2$prot))
+w2 <- filter(omega3, group != "Amino acid metabolism" & 
+              group != "Carbohydrate metabolism" & 
+              group != "Lipid metabolism" &
+              group != "Cellular respiration" &
+              group != "Nucleotide metabolism" &
+              group != "RNA processing" &
+              group != "Coenzyme metabolism" &
+              group != "Enzyme classification" &
+              group != "Chromatin organisation" &
+              group != "Cytoskeleton organisation" &
+              group != "Cell wall organisation" &
+              group != "not assigned" &
+              group != "Nutrient uptake" &
+              group != "Photosynthesis" &
+              str_detect(group2, "ribosome", negate = T) &
+              str_detect(group2, "translation", negate = T) &
+              str_detect(group3, "translation", negate = T) &
+              group2 != "proteolysis" &
+              group2 != "ubiquitin-proteasome system" &
+              group2 != "protein quality control" &
+              group != "Protein modification" &
+              group != "Protein translocation" &
+              group != "Redox homeostasis" &
+              group != "Secondary metabolism" &
+              group != "Solute transport" &
+              group != "Vesicle trafficking")
+w2 <- length(unique(w2$prot))
 
 #Number of proteins Enriched in HPG set
 omega4 <- filter(omega2, is.na(meanriBAQ_enriched_HPG) == F)
@@ -1548,6 +1602,33 @@ u3 <- filter(omega4, group == "Solute transport")
 u3 <- length(unique(u3$prot))
 v3 <- filter(omega4, group == "Vesicle trafficking")
 v3 <- length(unique(v3$prot))
+w3 <- filter(omega4, group != "Amino acid metabolism" & 
+              group != "Carbohydrate metabolism" & 
+              group != "Lipid metabolism" &
+              group != "Cellular respiration" &
+              group != "Nucleotide metabolism" &
+              group != "RNA processing" &
+              group != "Coenzyme metabolism" &
+              group != "Enzyme classification" &
+              group != "Chromatin organisation" &
+              group != "Cytoskeleton organisation" &
+              group != "Cell wall organisation" &
+              group != "not assigned" &
+              group != "Nutrient uptake" &
+              group != "Photosynthesis" &
+              str_detect(group2, "ribosome", negate = T) &
+              str_detect(group2, "translation", negate = T) &
+              str_detect(group3, "translation", negate = T) &
+              group2 != "proteolysis" &
+              group2 != "ubiquitin-proteasome system" &
+              group2 != "protein quality control" &
+              group != "Protein modification" &
+              group != "Protein translocation" &
+              group != "Redox homeostasis" &
+              group != "Secondary metabolism" &
+              group != "Solute transport" &
+              group != "Vesicle trafficking")
+w3 <- length(unique(w3$prot))
 
 #Number of proteins tagged with HPG
 omega5 <- filter(omega2, tagged_unenriched_HPG == "Y")
@@ -1591,7 +1672,37 @@ u4 <- filter(omega5, group == "Solute transport")
 u4 <- length(unique(u4$prot))
 v4 <- filter(omega5, group == "Vesicle trafficking")
 v4 <- length(unique(v4$prot))
-
+w4 <- filter(omega5, group != "Amino acid metabolism" & 
+              group != "Carbohydrate metabolism" & 
+              group != "Lipid metabolism" &
+              group != "Cellular respiration" &
+              group != "Nucleotide metabolism" &
+              group != "RNA processing" &
+              group != "Coenzyme metabolism" &
+              group != "Enzyme classification" &
+              group != "Chromatin organisation" &
+              group != "Cytoskeleton organisation" &
+              group != "Cell wall organisation" &
+              group != "not assigned" &
+              group != "Nutrient uptake" &
+              group != "Photosynthesis" &
+              str_detect(group2, "ribosome", negate = T) &
+              str_detect(group2, "translation", negate = T) &
+              str_detect(group3, "translation", negate = T) &
+              group2 != "proteolysis" &
+              group2 != "ubiquitin-proteasome system" &
+              group2 != "protein quality control" &
+              group != "Protein modification" &
+              group != "Protein translocation" &
+              group != "Redox homeostasis" &
+              group != "Secondary metabolism" &
+              group != "Solute transport" &
+              group != "Vesicle trafficking")
+w4 <- length(unique(w4$prot))
+batman <- sum(a, b, d, g, p, q, quell, x, xi, y, z, c, e, f, m, r, t, u, v, w, n)
+robin <- sum(a2, b2, d2, g2, p2, q2, quell2, x2, xi2, y2, z2, c2, e2, f2, m2, r2, t2, u2, v2, w2, n2)
+alfred <- sum(a3, b3, d3, g3, p3, q3, quell3, x3, xi3, y3, z3, c3, e3, f3, m3, r3, t3, u3, v3, w3, n3)
+batgirl <- sum(a4, b4, d4, g4, p4, q4, quell4, x4, xi, y4, z4, c4, e4, f4, m4, r4, t4, u4, v4, w4, n4)
 
 highConfCollapsed <- data.frame(Group = c("Amino acid metabolism", "Carbohydrate metabolism", "Cellular respiration",
                                           "Cellular organisation", "Photosynthesis", "Ribosomal subunits", "Translation",
@@ -1599,12 +1710,16 @@ highConfCollapsed <- data.frame(Group = c("Amino acid metabolism", "Carbohydrate
                                           "Other","Not assigned"),
                                 # MapmanBin = c("4", "3", "2", "12, 20, 21", "1", "17", "17", "19", "19", "18,23",
                                 #               "6-7, 9-10, 16, 22, 24-25, 50", "35"),
-                                TotalNumberOfProteins = c(a, b, d, g, p, q, quell, x, xi, y + z, sum(c, e, f, m, r, t, u, v) , n),
-                                NumberOfProteins_AHA_enriched = c(a2, b2, d2, g2, p2, q2, quell2, x2, xi2, y2 + z2, sum(c2, e2, f2, m2, r2, t2, u2, v2), n2),
-                                NumberOfProteins_HPG_enriched = c(a3, b3, d3, g3, p3, q3, quell3, x3, xi3, y3 + z3, sum(c3, e3, f3, m3, r3, t3, u3, v3), n3),
-                                NumberOfProteins_HPG_tagged = c(a4, b4, d4, g4, p4, q4, quell4, x4, xi, y4 + z4, sum(c4, e4, f4, m4, r4, t4, u4, v4), n4))
+                                TotalNumberOfProteins = c(a, b, d, g, p, q, quell, x, xi, y + z, sum(c, e, f, m, r, t, u, v, w), n),
+                                NumberOfProteins_AHA_enriched = c(a2, b2, d2, g2, p2, q2, quell2, x2, xi2, y2 + z2, sum(c2, e2, f2, m2, r2, t2, u2, v2, w2), n2),
+                                NumberOfProteins_HPG_enriched = c(a3, b3, d3, g3, p3, q3, quell3, x3, xi3, y3 + z3, sum(c3, e3, f3, m3, r3, t3, u3, v3, w3), n3),
+                                NumberOfProteins_HPG_tagged = c(a4, b4, d4, g4, p4, q4, quell4, x4, xi, y4 + z4, sum(c4, e4, f4, m4, r4, t4, u4, v4, w4), n4))
+highConfCollapsed <- highConfCollapsed %>% 
+  mutate(PercentTotalNumberOfProteins = signif(TotalNumberOfProteins/batman*100, digits = 1),
+         PercentNumberOfProteins_AHA_enriched = signif(NumberOfProteins_AHA_enriched/robin*100, digits = 1),
+         PercentNumberOfProteins_HPG_enriched = signif(NumberOfProteins_HPG_enriched/alfred*100, digits = 1),
+         PercentNumberOfProteins_HPG_tagged = signif(NumberOfProteins_HPG_tagged/batgirl*100, digits = 1))
 write.csv(highConfCollapsed, "high_confidence_proteins_collapsed.csv", row.names = F)
-
 ######does enrichment correlate with particular domains?######
 hEnri3 <- hEnri %>% 
   dplyr::rename("prot" = "firstID") %>% 

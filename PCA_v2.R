@@ -23,7 +23,7 @@ hpg_combined <- rbind(hpg_unenriched, hpg_enriched) %>%
   column_to_rownames(., var = "Experiment") 
 hpg_pca <- prcomp(hpg_combined, center = T, scale. = T)
 hpg_treatment <- c(rep("Bulk", 3), rep("Enriched", 3))
-png("Figure 4C hpg_enri_v_unenri.png", width = 500, height = 500)
+postscript("Figure 4C hpg_enri_v_unenri.ps")
 ggbiplot(hpg_pca, scale = 1, var.axes = F, ellipse = T, groups = hpg_treatment, labels.size = 20) +
   ggtitle("C") +
   theme_minimal(base_size = 18) +
@@ -52,7 +52,7 @@ aha_combined <- rbind(aha_unenriched, aha_enriched)%>%
   column_to_rownames(var = "Experiment") 
 aha_pca <- prcomp(aha_combined, center = T, scale. = T)
 aha_treatment <- c(rep("Bulk", 3), rep("Enriched", 3))
-png("Figure 4B aha_enri_v_unenri.png", width = 500, height = 500)
+postscript("Figure 4B aha_enri_v_unenri.ps")
 ggbiplot(aha_pca, scale = 1, var.axes = F, ellipse = T, groups = aha_treatment) +
   ggtitle("B") +
   theme_minimal(base_size = 18) +
@@ -74,7 +74,7 @@ enri_comb <- rbind(hpg_enriched, aha_enriched) %>%
   column_to_rownames(var = "Experiment") 
 enri_pca <- prcomp(enri_comb, center = T, scale. = T)
 comb_treatment <- c(rep("AHA", 2), rep("HPG", 3), "AHA")
-png("Figure 4D aha_v_hpg_enri.png", width = 500, height = 500)
+postscript("Figure 4D aha_v_hpg_enri.ps")
 ggbiplot(enri_pca, scale = 1, var.axes = F, ellipse = T, groups = comb_treatment) +
   ggtitle("D")+
   theme_minimal(base_size = 18) +
@@ -102,7 +102,7 @@ unenri_comb <- rbind(hpg_unenriched, aha_unenriched, untagged) %>%
   column_to_rownames(var = "Experiment") 
 unenri_pca <- prcomp(unenri_comb, center = T, scale. = T)
 comb_treatment2 <- c(rep("untagged", 3), "AHA", rep("HPG", 3), rep("AHA", 2))
-png("Figure 4A untagged_aha_hpg.png", width = 500, height = 500)
+postscript("Figure 4A untagged_aha_hpg.ps")
 ggbiplot(unenri_pca, scale = 1, var.axes = F, ellipse = T, groups = comb_treatment2) +
   ggtitle("A")+
   theme_minimal(base_size = 18) +

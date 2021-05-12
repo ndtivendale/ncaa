@@ -9,6 +9,7 @@ library(VennDiagram)
 library(extrafont)
 font_import()
 loadfonts(device = "win")
+wf <- windowsFonts()
 
 hpg <- read.csv("protFoldEnriHPG.csv", stringsAsFactors = F) %>% 
   select(c("firstID", "meanriBAQ_enriched"))
@@ -34,7 +35,7 @@ glenn <- read.delim("proteinGroupsGlenn.txt", stringsAsFactors = F) %>%
             (Intensity.Wes_control1_2 > 0 & Intensity.Wes_control1_3 > 0)) |
            ((Intensity.Wes_control2_1 > 0 & Intensity.Wes_control2_2 > 0) |
               (Intensity.Wes_control2_1 > 0 & Intensity.Wes_control2_3 > 0) |
-              (Intensity.Wes_control2_2 > 0 & Intensity.Wes_control2_3 > 0)))
+              (Intensity.Wes_control2_2 > 0 & Intensity.Wes_control2_3 > 0))) %>% 
   mutate(firstID = str_sub(Protein.IDs, end = 11)) %>% 
   mutate(present_glenn = "Y") %>% 
   select(c("firstID", "present_glenn"))
@@ -110,9 +111,8 @@ venn_data <- data.frame(overlap = c("hpg", "aha", "glenn", "yu", "hpg_aha", "hpg
                                   aha_glenn_count, aha_yu_count, glenn_yu_count, hpg_aha_glenn_count, hpg_aha_yu_count,
                                   hpg_glenn_yu_count, aha_glenn_yu_count, hpg_aha_glenn_yu_count))
 write.csv(venn_data, "venn_data.csv", row.names = F)
-
 grid.newpage()
-png("Supp Fig S14 tivendale_glenn_yu_comparison.png", width = 1200, height = 1000)
+jpeg("Supp Fig S14 tivendale_glenn_yu_comparison.jpeg", width = 12, height = 12, units = "in", res = 600)
 draw.quad.venn(area1 = hpg_count,
                     area2 = aha_count,
                     area3 = glenn_count,
@@ -128,10 +128,10 @@ draw.quad.venn(area1 = hpg_count,
                      n134 = hpg_glenn_yu_count,
                      n234 = aha_glenn_yu_count,
                     n1234 = hpg_aha_glenn_yu_count, 
-                      fill = c("blue", "yellow", "red", "green"),
+                      fill = c("#CC79A7", "#56B4E9", "#009E73", "#E69F00"),
                       alpha = 0.5,
-                      cex = 1.7,
-                      cat.cex = 1.7,
+                      cex = 1.2,
+                      cat.cex = 1.2,
                       lty = "blank",
                       fontfamily = wf$Arial,
                       cat.fontfamily = wf$Arial,
